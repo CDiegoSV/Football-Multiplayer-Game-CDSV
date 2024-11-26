@@ -9,7 +9,8 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
 {
 
     #region References
-    [Header("Button References")]
+    [Header("Menu References")]
+    [SerializeField] GameObject menuPanel;
     [SerializeField] TMP_InputField inputField;
     [SerializeField] GameObject okButton;
     [SerializeField] GameObject playerNameText;
@@ -19,6 +20,7 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
     [SerializeField] Animator panelAnimator;
     [SerializeField] AnimationClip outClip;
 
+    
     #endregion
 
     void Start()
@@ -38,15 +40,14 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.NickName = "";
         print("Ha entrado al lobby Ab");
-        panelAnimator.SetBool("PanelOut", true);
-        Invoke("LoadingPanelsSet", outClip.length);
+        panelAnimator.SetBool("LoadingPanelOut", true);
+        StartCoroutine(LoadingSceneOut());
         //PhotonNetwork.JoinOrCreateRoom("TestRoom", newRoomInfo(), null);
     }
 
     public override void OnJoinedRoom()
     {
         print("Entro a Room: " + PhotonNetwork.CurrentRoom.Name);
-        PhotonNetwork.LoadLevel(1);
         //PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
     }
 
@@ -72,9 +73,14 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
         return roomOptions;
     }
 
-    public void LoadingPanelsSet()
+    private IEnumerator LoadingSceneOut()
     {
-        loadingPanel.gameObject.SetActive(false);
+        panelAnimator.SetBool("LoadingPanelOut", true);
+        yield return new WaitForSeconds(outClip.length);
+        loadingPanel.SetActive(false);
+        CameraManager.instance.ChangeCurrentCameraTo(1);
+        yield return new WaitForSeconds(2f);
+        menuPanel.SetActive(true);
     }
 
     public void OnClickOkButton()
