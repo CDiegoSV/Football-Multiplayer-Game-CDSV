@@ -16,7 +16,7 @@ public class CameraManager : MonoBehaviour
 
     #region Runtime Variables
 
-    private CinemachineVirtualCameraBase _currentCamera;
+    [SerializeField] private CinemachineVirtualCameraBase _currentCamera;
 
     #endregion
 
@@ -57,7 +57,16 @@ public class CameraManager : MonoBehaviour
     {
         _currentCamera.Priority = 0;
         cameraList[cameraIndex].Priority = 10;
+        _currentCamera = cameraList[cameraIndex];
     }
 
+    #endregion
+
+    #region GettersSetters
+
+    public Transform setCurrentCameraFollowAndLookAt
+    {
+        set { _currentCamera.Follow = value; _currentCamera.LookAt = value; }
+    }
     #endregion
 }
