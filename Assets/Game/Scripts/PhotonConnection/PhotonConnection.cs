@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEngine.UI;
 
 public class PhotonConnection : MonoBehaviourPunCallbacks
 {
@@ -12,8 +13,9 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
     [Header("Menu References")]
     [SerializeField] GameObject menuPanel;
     [SerializeField] TMP_InputField inputField;
-    [SerializeField] GameObject okButton;
-    [SerializeField] GameObject playerNameText;
+    [SerializeField] TMP_Dropdown dropdown;
+    [SerializeField] GameObject createButton;
+    [SerializeField] CharacterSelection characterSelection;
 
     [Header("Loading Panel References")]
     [SerializeField] GameObject loadingPanel;
@@ -48,6 +50,8 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         print("Entro a Room: " + PhotonNetwork.CurrentRoom.Name);
+        characterSelection.SelectCharacter();
+        PhotonNetwork.LoadLevel(1);
         //PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
     }
 
@@ -62,11 +66,21 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
         base.OnJoinRoomFailed(returnCode, message);
         print("Error al intentar unirse al Room: " + message);
     }
-
     RoomOptions newRoomInfo()
     {
         RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 5;
+        switch (dropdown.value)
+        {
+            case 0:
+                roomOptions.MaxPlayers = 2;
+                break;
+            case 1:
+                roomOptions.MaxPlayers = 4;
+                break;
+            case 2:
+                roomOptions.MaxPlayers = 6;
+                break;
+        }
         roomOptions.IsOpen = true;
         roomOptions.IsVisible = true;
 
@@ -83,25 +97,13 @@ public class PhotonConnection : MonoBehaviourPunCallbacks
         menuPanel.SetActive(true);
     }
 
-    public void OnClickOkButton()
+
+
+    public void OnClickCreateRoomButton()
     {
         if (inputField.text != "")
         {
-            PhotonNetwork.NickName = inputField.text;
-        }
-        else
-        {
-            inputField.gameObject.SetActive(true);
-            okButton.gameObject.SetActive(true);
-            playerNameText.gameObject.SetActive(false);
-        }
-    }
-
-    public void OnClickPlayButton()
-    {
-        if(PhotonNetwork.NickName != "")
-        {
-            PhotonNetwork.JoinOrCreateRoom("TestRoom", newRoomInfo(), null);
+            PhotonNetwork.CreateRoom(inputField.text, newRoomInfo(), null);
         }
     }
 

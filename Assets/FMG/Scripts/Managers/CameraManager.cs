@@ -11,6 +11,7 @@ public class CameraManager : MonoBehaviour
     [Header("Camera References")]
 
     [SerializeField] private List<CinemachineVirtualCameraBase> cameraList;
+    [SerializeField] private CinemachineTargetGroup targetGroup;
 
     #endregion
 
@@ -60,6 +61,7 @@ public class CameraManager : MonoBehaviour
         _currentCamera = cameraList[cameraIndex];
     }
 
+
     #endregion
 
     #region GettersSetters
@@ -67,6 +69,11 @@ public class CameraManager : MonoBehaviour
     public Transform setCurrentCameraFollowAndLookAt
     {
         set { _currentCamera.Follow = value; _currentCamera.LookAt = value; }
+    }
+
+    public Transform AddMembersToTargetGroup
+    {
+        set { targetGroup.AddMember(value, 1, 0); }
     }
     #endregion
 }

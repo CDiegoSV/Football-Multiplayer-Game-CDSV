@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LobbyFuny
+  m_text: LobbyFunny
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -233,7 +233,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -600,13 +600,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lobby Button
       objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3043058277086633772}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickJoinRooomButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: JoinRoomButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4411618413356949098, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
       propertyPath: m_Color.a
       value: 0.27058825
       objectReference: {fileID: 0}
     - target: {fileID: 7245351546767383011, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
       propertyPath: m_text
-      value: Enter Room
+      value: Join Room
       objectReference: {fileID: 0}
     - target: {fileID: 7245351546767383011, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
       propertyPath: m_fontSize
@@ -623,8 +651,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1410273584954019957, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3043058277086633772}
   m_SourcePrefab: {fileID: 100100000, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+--- !u!1 &6787263285801609680 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1410273584954019957, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+  m_PrefabInstance: {fileID: 5594455512932186533}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3043058277086633772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6787263285801609680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b64cdd6a742048c43bfee3a24746ebe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6868735550032257370 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1365110974260533503, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
