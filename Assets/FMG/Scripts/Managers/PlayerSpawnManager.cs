@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerSpawnManager : MonoBehaviourPunCallbacks
 {
@@ -12,13 +13,16 @@ public class PlayerSpawnManager : MonoBehaviourPunCallbacks
     PhotonView myPV;
 
     Transform spawnTransform;
-    [SerializeField] Transform playersParentGameObject;
+    [SerializeField] GameObject playersParentGameObject;
 
     [SerializeField] Transform[] spawnPositions;
     [SerializeField] private List<GameObject> prefabModels;
+    [SerializeField] private Color blueTeamColor;
+    [SerializeField] private Color greenTeamColor;
 
     #region RuntimeVariables
 
+    private int playerIndex;
     private string prefabName;
 
     #endregion
@@ -46,13 +50,14 @@ public class PlayerSpawnManager : MonoBehaviourPunCallbacks
         if (LevelNetworkManager.Instance?.getCurrentPlayerCount > 0)
         {
             spawnTransform = spawnPositions[(int)LevelNetworkManager.Instance?.getCurrentPlayerCount - 1];
+            playerIndex = (int)LevelNetworkManager.Instance?.getCurrentPlayerCount;
         }
         if(LevelNetworkManager.Instance == null)
         {
             spawnTransform = spawnPositions[0];
         }
 
-        Invoke("InstantiatePlayer", 3f);
+        Invoke("InstantiatePlayer", 1f);
     }
 
     #endregion
@@ -72,29 +77,24 @@ public class PlayerSpawnManager : MonoBehaviourPunCallbacks
             Debug.LogError("No se encontró la propiedad 'Character' en las propiedades del jugador.");
         }
 
+        int playerParentViewID = playersParentGameObject.GetPhotonView().ViewID;
+
         GameObject playerInstance = PhotonNetwork.Instantiate("SoccerPlayer", spawnTransform.position, Quaternion.identity);
-        //photonView.RPC("SetGOParent", RpcTarget.AllBuffered, parameters: (playerInstance.transform, playersParentGameObject.transform));
-        SetGOParent(playerInstance.transform, playersParentGameObject.transform);
+        GameManager.instance.AddPlayerToTheGameList = playerInstance.GetComponent<PlayerController>();
+        int playerInstanceViewID = playerInstance.GetPhotonView().ViewID;
+        photonView.RPC("SetGOParent", RpcTarget.AllBuffered, playerInstanceViewID, playerParentViewID);
+        photonView.RPC("SetTeamColor", RpcTarget.AllBuffered, playerInstanceViewID, playerIndex);
         GameObject playerModelInstance = PhotonNetwork.Instantiate(prefabName, spawnTransform.position, Quaternion.identity);
-        //photonView.RPC("SetGOParent", RpcTarget.AllBuffered, parameters: (playerModelInstance.transform, playerInstance.transform));
-        SetGOParent(playerModelInstance.transform, playerInstance.transform);
-        int viewID = playerModelInstance.GetPhotonView().ViewID;
-        photonView.RPC("AddMemberToTargetGroupRPC", RpcTarget.AllBuffered, viewID);
+        int playerModelViewID = playerModelInstance.GetPhotonView().ViewID;
+        photonView.RPC("SetGOParent", RpcTarget.AllBuffered, playerModelViewID, playerInstanceViewID);
+        photonView.RPC("AddMemberToTargetGroupRPC", RpcTarget.AllBuffered, playerModelViewID);
     }
 
     #endregion
 
     #region Runtime Methods
 
-    /// <summary>
-    /// Sets the parent of "gameObject".
-    /// </summary>
-    /// <param name="gameObject"></param>
-    /// <param name="parent"></param>
-    private void SetGOParent(Transform gameObject, Transform parent)
-    {
-        gameObject.SetParent(parent);
-    }
+    
 
     #endregion
 
@@ -108,6 +108,35 @@ public class PlayerSpawnManager : MonoBehaviourPunCallbacks
         {
             Transform targetTransform = targetObject.transform;
             CameraManager.instance.AddMembersToTargetGroup = targetTransform;
+        }
+    }
+
+    [PunRPC]
+    /// <summary>
+    /// Sets the parent of "gameObject".
+    /// </summary>
+    /// <param name="gameObject"></param>
+    /// <param name="parent"></param>
+    private void SetGOParent(int gameObjectViewID, int parentViewID)
+    {
+        GameObject targetObject = PhotonView.Find(gameObjectViewID).gameObject;
+        GameObject parentObject = PhotonView.Find(parentViewID).gameObject;
+        targetObject.transform.SetParent(parentObject.transform);
+    }
+
+    [PunRPC]
+    private void SetTeamColor(int viewID, int playerIndex)
+    {
+        GameObject targetObject = PhotonView.Find(viewID).gameObject;
+        if (playerIndex % 2 == 0)
+        {
+            targetObject.transform.GetChild(1).GetChild(0).gameObject.GetComponent<Image>().color = greenTeamColor;
+            targetObject.transform.GetChild(1).GetChild(1).gameObject.GetComponent<Image>().color = greenTeamColor;
+        }
+        else
+        {
+            targetObject.transform.GetChild(1).GetChild(0).gameObject.GetComponent<Image>().color = blueTeamColor;
+            targetObject.transform.GetChild(1).GetChild(1).gameObject.GetComponent<Image>().color = blueTeamColor;
         }
     }
 

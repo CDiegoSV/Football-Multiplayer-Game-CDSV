@@ -601,6 +601,46 @@ PrefabInstance:
       value: Lobby Button
       objectReference: {fileID: 0}
     - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_NormalColor.a
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_PressedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_PressedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_PressedColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.a
+      value: 0.50980395
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.a
+      value: 0.5372549
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030711296234092980, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -630,7 +670,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4411618413356949098, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
       propertyPath: m_Color.a
-      value: 0.27058825
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411618413356949098, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411618413356949098, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411618413356949098, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7245351546767383011, guid: 68662e6e0a6adda4fb730224d1258412, type: 3}
       propertyPath: m_text

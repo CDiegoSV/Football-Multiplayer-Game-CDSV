@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
@@ -30,6 +31,7 @@ public class LevelNetworkManager : MonoBehaviourPunCallbacks
     public void DisconnectCurrentRoom()
     {
         PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel(0);
     }
 
 
@@ -37,7 +39,7 @@ public class LevelNetworkManager : MonoBehaviourPunCallbacks
 
     #endregion
 
-    #region PUN Methods
+    #region Photon Methods
 
 
     public override void OnLeftRoom()
@@ -53,7 +55,40 @@ public class LevelNetworkManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         print("Entró nuevo usuario: " + newPlayer.NickName);
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers && GameManager.instance.GetCurrentGameState == GameStates.WAITINGFORPLAYERS)
+        {
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            Debug.Log("Room lleno. Cambiando visibilidad a false.");
+            SetGameStartEvent();
+        }
+        else if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            Debug.Log("Room lleno. Cambiando visibilidad a false.");
+        }
+    }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        print("Salió el usuario: " + otherPlayer.NickName);
+        if (PhotonNetwork.CurrentRoom.PlayerCount < PhotonNetwork.CurrentRoom.MaxPlayers && !PhotonNetwork.CurrentRoom.IsVisible)
+        {
+            PhotonNetwork.CurrentRoom.IsVisible = true;
+            Debug.Log("Un jugador salió. Cambiando visibilidad a true.");
+        }
+    }
+
+
+    #endregion
+
+    #region Events
+
+    private void SetGameStartEvent()
+    {
+        byte m_ID = 1;
+        
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All};
+        PhotonNetwork.RaiseEvent(m_ID, null, raiseEventOptions, SendOptions.SendReliable);
     }
 
     #endregion

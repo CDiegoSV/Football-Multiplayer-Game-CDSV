@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private float verticalInputAxis;
 
     private bool canKick;
+    private bool canMove;
 
     #endregion
 
@@ -34,23 +35,33 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        InitializeTheAvatar();
+        if(photonView.IsMine)
+        {
+            InitializeTheAvatar();
+        }
     }
 
     void Update()
     {
         if (photonView.IsMine)
         {
-            horizontalInputAxis = Input.GetAxisRaw("Horizontal");
-            verticalInputAxis = Input.GetAxisRaw("Vertical");
-            _animator.SetFloat("InputMagnitude", _inputDirection.magnitude);
-            PlayerKick();
+            if(canMove)
+            {
+                horizontalInputAxis = Input.GetAxisRaw("Horizontal");
+                verticalInputAxis = Input.GetAxisRaw("Vertical");
+                _animator.SetFloat("InputMagnitude", _inputDirection.magnitude);
+                PlayerKick();
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                PauseToggle();
+            }
         }
     }
 
     private void FixedUpdate()
     {
-        if(photonView.IsMine)
+        if(photonView.IsMine && canMove)
         {
             RbMove();
         }
@@ -58,11 +69,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void OnTriggerStay(Collider other)
     {
+
         if (other.CompareTag("Ball") && !canKick)
         {
-            other.GetComponent<Rigidbody>().isKinematic = true;
             other.transform.position = new Vector3(playerBall.position.x, playerBall.position.y + other.gameObject.transform.position.y, playerBall.position.z);
-            other.transform.SetParent(playerBall, true);
+            int otherViewID = other.gameObject.GetPhotonView().ViewID;
+            int playerBallViewID = playerBall.gameObject.GetPhotonView().ViewID;
+            photonView.RPC("SetGOParent", RpcTarget.All, otherViewID, playerBallViewID);
             canKick = true;
         }
     }
@@ -73,6 +86,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void InitializeTheAvatar()
     {
+        canMove = true;
         if (_rigidBody == null)
         {
             _rigidBody = GetComponent<Rigidbody>();
@@ -83,7 +97,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
         if (_animator == null)
         {
-            _animator = transform.GetChild(1).GetComponent<Animator>();
+            _animator = transform.GetChild(2).GetComponent<Animator>();
         }
     }
 
@@ -120,9 +134,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         _animator.SetBool("Kicked", false);
         GameObject ball = playerBall.GetChild(0).gameObject;
-        ball.GetComponent<Rigidbody>().isKinematic = false;
-        ball.transform.SetParent(null, true);
-        ball.GetComponent<Rigidbody>().AddForce(transform.forward * 15f, ForceMode.Impulse);
+        int ballViewID = ball.GetPhotonView().ViewID;
+        photonView.RPC("SetNullGOParent", RpcTarget.All, ballViewID);
         StartCoroutine(CoolDownTimer());
     }
 
@@ -141,6 +154,49 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     #endregion
 
+    #region PublicMethods
+
+    public void PauseToggle()
+    {
+        canMove = !canMove;
+        UIManager.Instance.PausePanelToggle();
+    }
+
+    #endregion
+
+    #region RPC Methods
+
+    [PunRPC]
+    /// <summary>
+    /// Sets the parent of "gameObject".
+    /// </summary>
+    /// <param name="gameObject"></param>
+    /// <param name="parent"></param>
+    private void SetGOParent(int gameObjectViewID, int parentViewID)
+    {
+        GameObject targetObject = PhotonView.Find(gameObjectViewID).gameObject;
+        GameObject parentObject = PhotonView.Find(parentViewID).gameObject;
+        targetObject.transform.SetParent(parentObject.transform, true);
+        targetObject.GetComponent<Rigidbody>().isKinematic = true;
+        targetObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
+    [PunRPC]
+    /// <summary>
+    /// Sets null the parent of "gameObject".
+    /// </summary>
+    /// <param name="gameObject"></param>
+    /// <param name="parent"></param>
+    private void SetNullGOParent(int gameObjectViewID)
+    {
+        GameObject targetObject = PhotonView.Find(gameObjectViewID).gameObject;
+        targetObject.GetComponent<Rigidbody>().isKinematic = false;
+        targetObject.transform.SetParent(null, true);
+        targetObject.GetComponent<Rigidbody>().AddForce(transform.forward * 15f, ForceMode.Impulse);
+    }
+
+    #endregion
+
     #region Coroutines
 
     private IEnumerator CoolDownTimer()
@@ -151,4 +207,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     #endregion
 
+    #region GettersSetters
+
+    public bool CanMove
+    {
+        get { return canMove; }
+        set {  canMove = value; }
+    }
+
+    #endregion
 }

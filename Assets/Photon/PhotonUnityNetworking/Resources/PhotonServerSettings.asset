@@ -41,6 +41,15 @@ MonoBehaviour:
   - RespawnSpaceship
   - SetGOParent
   - AddMemberToTargetGroupRPC
+  - StateMechanic
+  - SetTeamColor
+  - StartCoroutineRPC
+  - UpdateUIRPC
+  - VictoryPanelUIRPC
+  - GoalShakeAndParticles
+  - UpdatePointOfTeamUIRPC
+  - SetNullGOParent
+  - StartGoalCoroutine
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
